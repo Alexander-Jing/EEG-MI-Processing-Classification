@@ -9,8 +9,7 @@ Dataset can be downloaded from https://bnci-horizon-2020.eu/database/data-sets
 ## Code
 
 The code consists the data loading, processing, feature extraction and classification. The demo is in 
-'''EEG_Classification.m'''
-, where the data loading, processing and CSP+LDA is implemented.
+```EEG_Classification.m```, where the data loading, processing and CSP+LDA is implemented.
 
 ## Request
 
