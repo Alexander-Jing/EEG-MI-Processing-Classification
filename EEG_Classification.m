@@ -45,7 +45,6 @@ for run_idx= 1:runs
     
     % get number of events (24 trials per run):
     event_num = numel(data{1,run_idx}.trial_end);
-    event_num_all = event_num_all + event_num;
     
     % epoch offset in seconds (5s per trial)
     epoch_offset = 5;
@@ -56,9 +55,12 @@ for run_idx= 1:runs
         event_start = data{1,run_idx}.trial_start(event_idx);
         event_end = data{1,run_idx}.trial_start(event_idx) + epoch_offset*data{1,run_idx}.fs;
         data_ = double(data{1,run_idx}.X(event_start:event_end, channel_indexes));
-        EPOCHS.EPDT{(run_idx-1)*event_num + event_idx} = data_';  % transpose the data to size (channel, timepoints)
-        EPOCHS.EPLB((run_idx-1)*event_num + event_idx) = true_y(event_idx);
+        EPOCHS.EPDT{event_num_all + event_idx} = data_';  % transpose the data to size (channel, timepoints)
+        EPOCHS.EPLB(event_num_all + event_idx) = true_y(event_idx);
     end
+    
+    % update event_num_all
+    event_num_all = event_num_all + event_num;
     
     % set channel names, sampling rate, trig time
     EPOCHS.channelNames = channels;
@@ -135,11 +137,11 @@ for fold = 1:num_folds
     test_EPLB = balanced_EPLB(test_idx);
     
     % Train and test the classifier
-    TSDATA = test_EPDT;
     TRDATA = train_EPDT;
+    TSDATA = test_EPDT;
     TRLB = train_EPLB;
     TSLB = test_EPLB;
-    
+
     % extract the features, please use your own feature extraction here
     % CSP parameter 
     params.classifier='LDA';
@@ -151,7 +153,14 @@ for fold = 1:num_folds
     PERF = perfCalc(LABELS,TSLB);
     
     % Display the predicted labels for the test set
-    disp(['Fold ', num2str(fold), ' Accuracy: ', num2str(PERF.ACC)]);
+    disp(['*******Fold ', num2str(fold),'*********']);
+    disp(['Train data size: ', num2str(length(train_EPLB))]);
+    disp(['Test data size: ', num2str(length(test_EPLB))]);
+    %num_class1 = sum(TSLB == 1);
+    %num_class2 = sum(TSLB == 2);
+    %disp(['Number of samples in class 1: ', num2str(num_class1)]);
+    %disp(['Number of samples in class 2: ', num2str(num_class2)]);
+    disp(['Accuracy: ', num2str(PERF.ACC)]);
     Accus_fold = [Accus_fold, PERF.ACC];
 
 end
