@@ -11,7 +11,7 @@ close all
 % for downloading data, please refer to https://bnci-horizon-2020.eu/database/data-sets 
 
 % load the data
-load('S01.mat');
+load('./Data/S01.mat');
 
 % in this dataset, only 5 conventional EEG channels and one EOG channel were used
 channels = {'F4','T8','C4','Cz','P4','HEOG'};
