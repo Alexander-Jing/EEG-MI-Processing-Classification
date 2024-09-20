@@ -12,6 +12,16 @@ from utils import perfCalc
 
 if __name__ == '__main__':
     # Load the data
+    """
+    This data set consists of electroencephalography (EEG) data collected from one
+    subject with a high spinal cord lesion controlling an EEG/EOG hybrid BNCI to operate
+    a neuroprosthetic device attached to his paralyzed right upper limb. 
+    The cue-based BNCI paradigm consisted of two different tasks:
+    imagination of movement% of the right hand (class 1) and relaxation/no movement(class 2),
+    for more details, please refer to https://lampx.tugraz.at/~bci/database/002-2015/description.pdf
+    for downloading data, please refer to https://bnci-horizon-2020.eu/database/data-sets 
+    I don't know why my boss first choose matlab for code, as I initially recommend python. I have to write this python implementation additionally giving up my spare time. I hope you can understand.
+    """
     data = sio.loadmat('./Data/S01.mat')
     channels = ['F4', 'T8', 'C4', 'Cz', 'P4', 'HEOG']
     runs = 3
