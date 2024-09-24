@@ -33,3 +33,4 @@ def ButterFilter(FilterOrder, Wband, SampleFre, FilterType, Data):
         filtered_data[i, :] = filtfilt(b, a, Data[i, :])
     return filtered_data
 
+# You can add your own preprocessing functions here.

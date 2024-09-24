@@ -45,7 +45,7 @@ if __name__ == '__main__':
         
         event_num_all += event_num
 
-    # Data preprocessing
+    # Data preprocessing, you can add your own preprocessing here
     # Remove the channel 'HEOG'
     index_remove = channels.index('HEOG')
     channel_indexes.pop(index_remove)
@@ -103,8 +103,8 @@ if __name__ == '__main__':
         TSLB = test_EPLB
 
         
-        # Extract the features, please use your own feature extraction here
-        # in your own code, you can modified the code to fit your own feature extraction or classification 
+        # Extract the features and make the classification, you can feature extraction here
+        # In your own code, you can modified the code to fit your own feature extraction or classification 
         # The following code is an example of using the train_csp function to extract features and train a LDA classifier
         params = {'classifier': 'LDA'}
         trainParams = {'m': 2}
