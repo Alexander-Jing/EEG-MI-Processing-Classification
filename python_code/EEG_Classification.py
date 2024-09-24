@@ -20,26 +20,26 @@ if __name__ == '__main__':
     imagination of movement% of the right hand (class 1) and relaxation/no movement(class 2),
     for more details, please refer to https://lampx.tugraz.at/~bci/database/002-2015/description.pdf
     for downloading data, please refer to https://bnci-horizon-2020.eu/database/data-sets 
-    I don't know why my boss first choose matlab for code, as I initially recommend python. I have to write this python implementation additionally giving up my spare time. I hope you can understand.
     """
     data = sio.loadmat('./Data/S01.mat')
     channels = ['F4', 'T8', 'C4', 'Cz', 'P4', 'HEOG']
     runs = 3
-    EPOCHS = {'EPDT': [], 'EPLB': [], 'channelNames': channels, 'fs': data['fs'][0][0], 'trigtime': 5}
+    EPOCHS = {'EPDT': [], 'EPLB': [], 'channelNames': channels, 'fs': data['data'][0,1]['fs'][0,0][0,0], 'trigtime': 5}
     event_num_all = 0
 
     # Read all data
     for run_idx in range(runs):
-        trueLabel = data['data'][0, run_idx]['y'][0, 0].flatten()
-        channel_indexes = [data['data'][0, run_idx]['channel_names'][0, 0].tolist().index(ch) for ch in channels]
+        _channel_names = data['data'][0, run_idx]['channel_names'][0, 0][:].tolist()
+        channel_names = [name[0] for name in _channel_names[0]]
+        channel_indexes = [channel_names.index(ch) for ch in channels]
         event_num = len(data['data'][0, run_idx]['trial_end'][0, 0].flatten())
         epoch_offset = 5
-        true_y = data['data'][0, run_idx]['y'][0, 0].flatten()
+        true_y = data['data'][0, run_idx]['y'][0, 0].flatten().astype('int')
         
         for event_idx in range(event_num):
-            event_start = data['data'][0, run_idx]['trial_start'][0, 0][event_idx]
-            event_end = event_start + epoch_offset * data['data'][0, run_idx]['fs'][0, 0]
-            data_ = data['data'][0, run_idx]['X'][event_start:event_end, channel_indexes]
+            event_start = data['data'][0, run_idx]['trial_start'][0, 0][event_idx][0].astype('int')
+            event_end = event_start + epoch_offset * data['data'][0, run_idx]['fs'][0, 0][0, 0].astype('int')
+            data_ = data['data'][0, run_idx]['X'][0, 0][event_start:event_end, channel_indexes]
             EPOCHS['EPDT'].append(data_.T)
             EPOCHS['EPLB'].append(true_y[event_idx])
         
@@ -76,7 +76,8 @@ if __name__ == '__main__':
     class1_idx = np.where(labels == 1)[0]
     class2_idx = np.where(labels == 2)[0]
     min_samples = min(len(class1_idx), len(class2_idx))
-    np.random.seed(42)
+    random_seed = 42
+    np.random.seed(random_seed)  # Set the random seed for reproducibility
     class1_idx = np.random.choice(class1_idx, min_samples, replace=False)
     class2_idx = np.random.choice(class2_idx, min_samples, replace=False)
     balanced_idx = np.concatenate((class1_idx, class2_idx))
@@ -85,7 +86,7 @@ if __name__ == '__main__':
 
     # Split the dataset into 5 parts, we use a 5-fold cross-validation
     num_folds = 5
-    kf = KFold(n_splits=num_folds, shuffle=True, random_state=42)
+    kf = KFold(n_splits=num_folds, shuffle=True, random_state=random_seed)
     Accus_fold = []
 
     # Perform 5-fold cross-validation
@@ -101,9 +102,10 @@ if __name__ == '__main__':
         TRLB = train_EPLB
         TSLB = test_EPLB
 
+        
         # Extract the features, please use your own feature extraction here
-        # CSP parameter 
-        # Assuming train_csp and test_csp functions are defined elsewhere
+        # in your own code, you can modified the code to fit your own feature extraction or classification 
+        # The following code is an example of using the train_csp function to extract features and train a LDA classifier
         params = {'classifier': 'LDA'}
         trainParams = {'m': 2}
         WCSP, L = train_csp(TRDATA, TRLB, trainParams)
@@ -112,10 +114,15 @@ if __name__ == '__main__':
         ftr, fts, LABELS, ZTR, ZTS = test_csp(TSDATA, TRDATA, TRLB, WCSP, params)
         PERF = perfCalc(LABELS, TSLB)
         
+
         # Display the predicted labels for the test set
         print(f'*******Fold {fold_idx}*********')
         print(f'Train data size: {len(train_EPLB)}')
         print(f'Test data size: {len(test_EPLB)}')
+        #num_class1 = np.sum(TSLB == 1)
+        #num_class2 = np.sum(TSLB == 2)
+        #print(f'Number of samples in class 1: {num_class1}')
+        #print(f'Number of samples in class 2: {num_class2}')
         print(f'Accuracy: {PERF["ACC"]}')
         Accus_fold.append(PERF['ACC'])
 

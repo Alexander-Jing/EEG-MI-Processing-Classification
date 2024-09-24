@@ -31,3 +31,5 @@ def test_csp(TSDATA, TRDATA, TRLB, WCSP, params):
         LABELS = clf.predict(fts)
     
     return ftr, fts, LABELS, ZTR, ZTS
+
+# you can add your own code for classification here

@@ -12,6 +12,7 @@ close all
 
 % load the data
 load('./Data/S01.mat');
+%load('./S01.mat');
 
 % in this dataset, only 5 conventional EEG channels and one EOG channel were used
 channels = {'F4','T8','C4','Cz','P4','HEOG'};

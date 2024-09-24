@@ -24,8 +24,10 @@ def filterEpochs(RawData, fparams):
     return FilteredData
 
 def ButterFilter(FilterOrder, Wband, SampleFre, FilterType, Data):
-    wn = np.array(Wband) / (SampleFre / 2)
-    b, a = butter(FilterOrder, wn, btype=FilterType)
+    wn = np.array(Wband)
+    b, a = butter(FilterOrder, wn, btype=FilterType, fs=SampleFre)
+    #wn = np.array(Wband) / (SampleFre / 2)
+    #b, a = butter(FilterOrder, wn, btype=FilterType)
     filtered_data = np.zeros_like(Data)
     for i in range(Data.shape[0]):
         filtered_data[i, :] = filtfilt(b, a, Data[i, :])

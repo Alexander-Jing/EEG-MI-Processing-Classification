@@ -35,7 +35,7 @@ def train_csp(TRDATA, TRLB, trainParams):
         
         # Calculate CSP matrix
         Q = np.linalg.inv(RB).dot(RA)
-        W, A = np.linalg.eig(Q)
+        A, W = np.linalg.eig(Q)
         # Sort eigenvalues in descending order
         order = np.argsort(A)[::-1]
         # Sort eigen vectors
@@ -45,3 +45,5 @@ def train_csp(TRDATA, TRLB, trainParams):
     
     WCSP = np.concatenate(WCSP, axis=0)
     return WCSP, L
+
+# you can add your own code for feature extraction here

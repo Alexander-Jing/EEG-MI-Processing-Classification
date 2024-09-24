@@ -1,6 +1,7 @@
 import numpy as np
 
 def perfCalc(LABEL, TRLB):
+    # calculate confusion matrix
     K = len(LABEL)
     C = len(np.unique(TRLB))
     confM = np.zeros((C, C))
@@ -8,7 +9,7 @@ def perfCalc(LABEL, TRLB):
     for k in range(K):
         ctr = LABEL[k]
         ces = TRLB[k]
-        confM[ctr-1, ces-1] += 1
+        confM[ctr-1, ces-1] += 1  # take care, the class labels start from 1, not zero, so minus 1 for index
     
     TP = np.diag(confM)
     FP = np.sum(confM, axis=0) - TP
