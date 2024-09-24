@@ -70,6 +70,7 @@ for run_idx= 1:runs
 end
 
 %% data preprocessing
+% you can add your own preprocessing code here
 % remove the channel 'HEOG'
 index_remove = find(strcmp(channels, 'HEOG'));
 channel_indexes(index_remove) = [];
@@ -143,7 +144,7 @@ for fold = 1:num_folds
     TRLB = train_EPLB;
     TSLB = test_EPLB;
 
-    % extract the features, please use your own feature extraction here
+    % extract the features, you can use your own feature extraction here
     % CSP parameter 
     params.classifier='LDA';
     trainParams.m = 2;

@@ -2,6 +2,7 @@ import numpy as np
 from scipy.signal import butter, filtfilt
 
 def ref_CAR(RawData):
+    # referring to https://github.com/sccn/eeglab/blob/develop/functions/sigprocfunc/reref.m
     nchan = RawData.shape[0]
     refmatrix = np.eye(nchan) - np.ones((nchan, nchan)) / nchan
     DataRef = refmatrix @ RawData
