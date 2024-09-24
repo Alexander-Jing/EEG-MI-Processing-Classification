@@ -38,4 +38,4 @@ To run the EEG data processing and classification code, ensure you have the foll
 
 Try to modify the code in the part of data loading, processing, feature extraction and classification to improve the average 5-fold cross validation accuracy. Don't pay too much attention on the average accuracy, as it is just a demo, try to understand the algorithms and methods widely used in EEG motor imagery.   
 
-Any questions, please contact me via the issues in github.
+Any questions, please contact me via the issues in github, thank you!
